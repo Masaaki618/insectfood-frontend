@@ -46,3 +46,6 @@ app.*.map.json
 
 # 環境変数ファイル
 .env
+
+# Claude Code
+data/
