@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/shared/theme/app_colors.dart';
 import 'package:go_router/go_router.dart';
 
-/// アプリのルート定義
-/// 画面遷移のルートをすべてここで管理する
+// アプリのルート定義
+// 画面遷移のルートをすべてここで管理する
 final _router = GoRouter(
   initialLocation: '/',
   routes: [
@@ -39,6 +40,15 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(title: '昆虫食初心者ガイド', routerConfig: _router);
+    return MaterialApp.router(
+      title: '昆虫食初心者ガイド',
+      routerConfig: _router,
+      theme: ThemeData(
+        // メインカラーをAppColors.primaryから自動生成
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
+        // 全画面の背景色をAppColors.backgroundに統一
+        scaffoldBackgroundColor: AppColors.background,
+      ),
+    );
   }
 }
