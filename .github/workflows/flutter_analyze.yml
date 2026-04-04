@@ -1,0 +1,30 @@
+name: Flutter Analyze
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+
+jobs:
+  analyze:
+    name: flutter analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Flutterをセットアップ
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: パッケージをインストール
+        working-directory: frontend
+        run: flutter pub get
+
+      - name: 静的解析を実行
+        working-directory: frontend
+        run: flutter analyze
