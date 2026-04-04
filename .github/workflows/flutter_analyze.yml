@@ -4,8 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - 'frontend/**'
 
 jobs:
   analyze:
@@ -22,9 +20,7 @@ jobs:
           channel: stable
 
       - name: パッケージをインストール
-        working-directory: frontend
         run: flutter pub get
 
       - name: 静的解析を実行
-        working-directory: frontend
         run: flutter analyze
