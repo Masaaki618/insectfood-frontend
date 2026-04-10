@@ -65,7 +65,7 @@
 **AC**:
 - [ ] `features/insects/models/insect.dart` に `Insect` モデルが `../../docs/04_api.md` のレスポンス形式に沿って定義されている
 - [ ] `features/insects/repositories/insect_repository.dart` が `GET /api/v1/insects` を呼び出して `List<Insect>` を返す
-- [ ] `features/insects/providers/insects_provider.dart` が `AsyncValue<List<Insect>>` を提供する
+- [ ] `features/insects/services/insects_service.dart` が `AsyncValue<List<Insect>>` を提供する
 - [ ] `InsectsPage` に昆虫カード（画像・名前・難易度★）一覧が表示される
 - [ ] 昆虫カードをタップすると昆虫詳細画面（`/insects/:id`）に遷移する
 - [ ] データ取得中はローディングインジケーターが表示される（簡易実装でよい）
