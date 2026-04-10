@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/insects/pages/insects_list_page.dart';
 import 'package:frontend/shared/theme/app_colors.dart';
 import 'package:go_router/go_router.dart';
 
 // アプリのルート定義
 // 画面遷移のルートをすべてここで管理する
 final _router = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/insects', // ← ここを変更
   routes: [
     GoRoute(
       path: '/',
@@ -22,15 +23,29 @@ final _router = GoRouter(
       builder: (context, state) =>
           const Scaffold(body: Center(child: Text('診断結果画面'))),
     ),
-    GoRoute(
-      path: '/insects',
-      builder: (context, state) =>
-          const Scaffold(body: Center(child: Text('昆虫一覧画面'))),
-    ),
+    GoRoute(path: '/insects', builder: (context, state) => InsectsListPage()),
     GoRoute(
       path: '/insects/:id',
-      builder: (context, state) =>
-          const Scaffold(body: Center(child: Text('昆虫詳細画面'))),
+      builder: (context, state) {
+        // context: 親ウィジェットツリーの情報
+        //   → MediaQuery.of(context)で画面サイズ取得
+        //   → Navigator.of(context)で画面遷移
+
+        // state: このルートに渡されたパラメータ情報
+        //   → pathParameters['id'] で /insects/:id の :id を取得
+        //   → queryParameters で ?foo=bar を取得
+        final id = state.pathParameters['id'];
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("詳細画面：insects/$id"),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => context.pop(), // go() から pop() に戻す
+            ),
+          ),
+          body: Center(child: Text("詳細画面：insects/$id")),
+        );
+      },
     ),
   ],
 );
