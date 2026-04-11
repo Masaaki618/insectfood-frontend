@@ -22,5 +22,8 @@ jobs:
       - name: パッケージをインストール
         run: flutter pub get
 
+      - name: .env ファイルを作成（存在確認のため）
+        run: touch .env
+
       - name: 静的解析を実行
         run: flutter analyze
