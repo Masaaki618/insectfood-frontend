@@ -1,15 +1,24 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/features/insects/models/insect.dart';
 
-/// API通信の共通クライアント
-/// ベースURLやヘッダーの設定をまとめる
 class ApiClient {
-  static Dio create() {
-    return Dio(
+  static late final Dio _dio;
+
+  static void initialize() {
+    _dio = Dio(
       BaseOptions(
-        // --dart-define=API_BASE_URL=... で起動時に注入する
-        baseUrl: const String.fromEnvironment('API_BASE_URL'),
+        baseUrl: dotenv.env['API_BASE_URL'] ?? 'http://localhost:8080/api/v1',
         headers: {'Content-Type': 'application/json'},
       ),
     );
+  }
+
+  // getInsects() メソッド（実際にAPIを呼ぶ）
+  Future<List<Insect>> getInsects() async {
+    final response = await _dio.get('/insects');
+    return (response.data as List)
+        .map((json) => Insect.fromJson(json))
+        .toList();
   }
 }
