@@ -21,4 +21,9 @@ class ApiClient {
         .map((json) => Insect.fromJson(json))
         .toList();
   }
+
+  Future<Insect> getInsectById(int id) async {
+    final response = await _dio.get('/insects/$id');
+    return Insect.fromJson(response.data);
+  }
 }
