@@ -269,6 +269,35 @@ class DiagnosisPage extends ConsumerWidget {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 16),
+
+                      // テスト用：結果を見るボタン
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            context.push('/diagnosis/result');
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: AppColors.primary,
+                              width: 1,
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            '結果を見る（テスト用）',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
