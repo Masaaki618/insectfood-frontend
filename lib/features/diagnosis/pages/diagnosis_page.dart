@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/features/diagnosis/providers/diagnosis_provider.dart';
+import 'package:frontend/features/questions/providers/questions_provider.dart';
 import 'package:frontend/shared/theme/app_colors.dart';
 import 'package:go_router/go_router.dart';
 
@@ -35,10 +36,10 @@ class DiagnosisPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final diagnosis = ref.watch(diagnosisStateProvider);
+    final questionsAsync = ref.watch(questionsProvider);
 
-    if (diagnosis.isLoading) {
-      return Scaffold(
+    return questionsAsync.when(
+      loading: () => Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
           child: Column(
@@ -61,17 +62,23 @@ class DiagnosisPage extends ConsumerWidget {
             ],
           ),
         ),
-      );
-    }
-
-    if (diagnosis.error != null) {
-      return Scaffold(
+      ),
+      error: (error, _) => Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
-          child: Text('エラーが発生しました: ${diagnosis.error}'),
+          child: Text('エラーが発生しました: $error'),
         ),
-      );
-    }
+      ),
+      data: (questions) {
+        // 初回のみ質問をセット
+        ref.read(diagnosisStateProvider.notifier).setQuestions(questions);
+        return _buildDiagnosisScreen(context, ref);
+      },
+    );
+  }
+
+  Widget _buildDiagnosisScreen(BuildContext context, WidgetRef ref) {
+    final diagnosis = ref.watch(diagnosisStateProvider);
 
     if (diagnosis.questions.isEmpty) {
       return Scaffold(
@@ -83,7 +90,6 @@ class DiagnosisPage extends ConsumerWidget {
     }
 
     final currentQuestion = diagnosis.questions[diagnosis.currentQuestion - 1];
-    // 完了した問い数に基づいて進捗を計算（現在の問いは含めない）
     final completedQuestions = diagnosis.currentQuestion - 1;
     final progressPercentage = (completedQuestions / 6 * 100).toInt();
 
@@ -197,22 +203,9 @@ class DiagnosisPage extends ConsumerWidget {
                       // はい/いいえボタン
                       Row(
                         children: [
-                          // はいボタン
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () {
-                                ref
-                                    .read(diagnosisStateProvider.notifier)
-                                    .answerQuestion(1);
-
-                                if (diagnosis.currentQuestion == 6) {
-                                  context.push('/diagnosis/result');
-                                } else {
-                                  ref
-                                      .read(diagnosisStateProvider.notifier)
-                                      .nextQuestion();
-                                }
-                              },
+                              onPressed: () => _handleAnswer(context, ref, 1),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 padding: const EdgeInsets.symmetric(
@@ -233,23 +226,9 @@ class DiagnosisPage extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(width: 12),
-
-                          // いいえボタン
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () {
-                                ref
-                                    .read(diagnosisStateProvider.notifier)
-                                    .answerQuestion(0);
-
-                                if (diagnosis.currentQuestion == 6) {
-                                  context.push('/diagnosis/result');
-                                } else {
-                                  ref
-                                      .read(diagnosisStateProvider.notifier)
-                                      .nextQuestion();
-                                }
-                              },
+                              onPressed: () => _handleAnswer(context, ref, 0),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.grey.withAlpha(77),
                                 padding: const EdgeInsets.symmetric(
@@ -309,5 +288,18 @@ class DiagnosisPage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void _handleAnswer(BuildContext context, WidgetRef ref, int answer) {
+    final notifier = ref.read(diagnosisStateProvider.notifier);
+    final diagnosis = ref.read(diagnosisStateProvider);
+
+    notifier.answerQuestion(answer);
+
+    if (diagnosis.currentQuestion == 6) {
+      context.push('/diagnosis/result');
+    } else {
+      notifier.nextQuestion();
+    }
   }
 }

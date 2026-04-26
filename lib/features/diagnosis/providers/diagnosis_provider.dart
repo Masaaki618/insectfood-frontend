@@ -1,7 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/features/questions/models/question.dart';
-import 'package:frontend/features/questions/repositories/question_repository.dart';
-import 'package:frontend/shared/api/api_client.dart';
 
 class DiagnosisState {
   final int currentQuestion;
@@ -40,32 +38,29 @@ class DiagnosisState {
 }
 
 class DiagnosisStateNotifier extends StateNotifier<DiagnosisState> {
-  final QuestionRepository _repository;
-
-  DiagnosisStateNotifier(this._repository)
-      : super(DiagnosisState(
+  DiagnosisStateNotifier({
+    List<Question> questions = const [],
+    bool isLoading = false,
+  }) : super(DiagnosisState(
           currentQuestion: 1,
-          questions: [],
+          questions: questions,
           answers: [0, 0, 0, 0, 0, 0],
           categoryScores: {'visual': 0, 'physical': 0, 'mental': 0},
-          isLoading: true,
-        )) {
-    _loadQuestions();
+          isLoading: isLoading,
+        ));
+
+  void setQuestions(List<Question> questions) {
+    state = state.copyWith(
+      questions: questions,
+      isLoading: false,
+    );
   }
 
-  Future<void> _loadQuestions() async {
-    try {
-      final questions = await _repository.getQuestions();
-      state = state.copyWith(
-        questions: questions,
-        isLoading: false,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        error: e.toString(),
-        isLoading: false,
-      );
-    }
+  void setError(String error) {
+    state = state.copyWith(
+      error: error,
+      isLoading: false,
+    );
   }
 
   void answerQuestion(int answer) {
@@ -120,12 +115,7 @@ class DiagnosisStateNotifier extends StateNotifier<DiagnosisState> {
   }
 }
 
-final questionRepositoryProvider = Provider<QuestionRepository>((ref) {
-  return QuestionRepository(ApiClient());
-});
-
 final diagnosisStateProvider =
     StateNotifierProvider<DiagnosisStateNotifier, DiagnosisState>((ref) {
-  final repository = ref.watch(questionRepositoryProvider);
-  return DiagnosisStateNotifier(repository);
+  return DiagnosisStateNotifier(isLoading: true);
 });
