@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 class DiagnosisResultPage extends ConsumerWidget {
   const DiagnosisResultPage({super.key});
 
+  /// カテゴリに対応する日本語ラベルを返します
   String _getCategoryLabel(String category) {
     switch (category) {
       case 'visual':
@@ -20,6 +21,8 @@ class DiagnosisResultPage extends ConsumerWidget {
     }
   }
 
+  /// 診断結果を表示します
+  /// カテゴリ別スコア・回答状況・リセットボタンを表示します
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final diagnosis = ref.watch(diagnosisStateProvider);

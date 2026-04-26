@@ -18,6 +18,8 @@ class DiagnosisState {
     this.error,
   });
 
+  /// 指定したフィールドのみを更新した新しいDiagnosisStateを生成します
+  /// 指定されなかったフィールドは元の値を保持します
   DiagnosisState copyWith({
     int? currentQuestion,
     List<Question>? questions,
@@ -49,6 +51,7 @@ class DiagnosisStateNotifier extends StateNotifier<DiagnosisState> {
           isLoading: isLoading,
         ));
 
+  /// APIから取得した質問リストを状態に保存し、ローディング状態を終了します
   void setQuestions(List<Question> questions) {
     state = state.copyWith(
       questions: questions,
@@ -56,6 +59,7 @@ class DiagnosisStateNotifier extends StateNotifier<DiagnosisState> {
     );
   }
 
+  /// 質問取得エラーを状態に記録し、ローディング状態を終了します
   void setError(String error) {
     state = state.copyWith(
       error: error,
@@ -63,6 +67,8 @@ class DiagnosisStateNotifier extends StateNotifier<DiagnosisState> {
     );
   }
 
+  /// 現在の質問に対する回答を記録し、カテゴリ別スコアを再計算します
+  /// [answer]: 0 (いいえ) or 1 (はい)
   void answerQuestion(int answer) {
     final newAnswers = [...state.answers];
     newAnswers[state.currentQuestion - 1] = answer;
@@ -75,6 +81,7 @@ class DiagnosisStateNotifier extends StateNotifier<DiagnosisState> {
     );
   }
 
+  /// 次の質問に進みます（質問6までのみ進行可能）
   void nextQuestion() {
     if (state.currentQuestion < 6) {
       state = state.copyWith(
@@ -83,6 +90,7 @@ class DiagnosisStateNotifier extends StateNotifier<DiagnosisState> {
     }
   }
 
+  /// 前の質問に戻ります（質問1より前には戻れません）
   void previousQuestion() {
     if (state.currentQuestion > 1) {
       state = state.copyWith(
@@ -91,6 +99,8 @@ class DiagnosisStateNotifier extends StateNotifier<DiagnosisState> {
     }
   }
 
+  /// 診断をリセットし、最初の質問に戻します
+  /// 質問リストと状態の初期値に戻します
   void reset() {
     state = DiagnosisState(
       currentQuestion: 1,
@@ -101,6 +111,8 @@ class DiagnosisStateNotifier extends StateNotifier<DiagnosisState> {
     );
   }
 
+  /// 回答リストからカテゴリ別スコアを計算します
+  /// 各質問の category フィールドで分類し、スコアを集計します
   Map<String, int> _calculateCategoryScores(List<int> answers) {
     final scores = {'visual': 0, 'physical': 0, 'mental': 0};
 

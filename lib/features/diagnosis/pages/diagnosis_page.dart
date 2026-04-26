@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 class DiagnosisPage extends ConsumerWidget {
   const DiagnosisPage({super.key});
 
+  /// カテゴリに対応する絵文字を返します
   String _getCategoryEmoji(String category) {
     switch (category) {
       case 'visual':
@@ -21,6 +22,7 @@ class DiagnosisPage extends ConsumerWidget {
     }
   }
 
+  /// カテゴリに対応する日本語ラベルを返します
   String _getCategoryLabel(String category) {
     switch (category) {
       case 'visual':
@@ -34,6 +36,7 @@ class DiagnosisPage extends ConsumerWidget {
     }
   }
 
+  /// 質問を取得し、ローディング/エラー/データの各状態を処理して画面を構築します
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final questionsAsync = ref.watch(questionsProvider);
@@ -77,6 +80,8 @@ class DiagnosisPage extends ConsumerWidget {
     );
   }
 
+  /// 診断画面のUIを構築します
+  /// 進捗バー・質問文・はい/いいえボタンを表示します
   Widget _buildDiagnosisScreen(BuildContext context, WidgetRef ref) {
     final diagnosis = ref.watch(diagnosisStateProvider);
 
@@ -290,6 +295,8 @@ class DiagnosisPage extends ConsumerWidget {
     );
   }
 
+  /// ユーザーの回答を処理します
+  /// 最後の質問なら結果画面へ遷移し、そうでなければ次の質問へ進みます
   void _handleAnswer(BuildContext context, WidgetRef ref, int answer) {
     final notifier = ref.read(diagnosisStateProvider.notifier);
     final diagnosis = ref.read(diagnosisStateProvider);
