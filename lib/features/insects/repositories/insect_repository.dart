@@ -7,7 +7,10 @@ class InsectRepository {
   InsectRepository(this._apiClient);
 
   Future<List<Insect>> getInsects() {
-
     return _apiClient.getInsects(); // ← インスタンスメソッドとして呼ぶ
+  }
+
+  Future<Insect> getInsectById(int id) {
+    return _apiClient.getInsectById(id);
   }
 }
