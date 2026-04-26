@@ -73,8 +73,10 @@ class DiagnosisPage extends ConsumerWidget {
         ),
       ),
       data: (questions) {
-        // 初回のみ質問をセット
-        ref.read(diagnosisStateProvider.notifier).setQuestions(questions);
+        // ウィジェットツリー構築後に質問をセット
+        Future.microtask(
+          () => ref.read(diagnosisStateProvider.notifier).setQuestions(questions),
+        );
         return _buildDiagnosisScreen(context, ref);
       },
     );
