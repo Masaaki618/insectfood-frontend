@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/diagnosis/pages/diagnosis_page.dart';
 import 'package:frontend/features/insects/pages/insects_list_page.dart';
 import 'package:frontend/features/insects/pages/insect_detail_page.dart';
 import 'package:frontend/shared/theme/app_colors.dart';
@@ -16,8 +17,7 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/diagnosis',
-      builder: (context, state) =>
-          const Scaffold(body: Center(child: Text('診断フロー画面'))),
+      builder: (context, state) => const DiagnosisPage(),
     ),
     GoRoute(
       path: '/diagnosis/result',
