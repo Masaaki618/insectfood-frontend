@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 // アプリのルート定義
 // 画面遷移のルートをすべてここで管理する
 final _router = GoRouter(
-  initialLocation: '/insects', // ← ここを変更
+  initialLocation: '/diagnosis', // ← 診断フロー画面を確認
   routes: [
     GoRoute(
       path: '/',

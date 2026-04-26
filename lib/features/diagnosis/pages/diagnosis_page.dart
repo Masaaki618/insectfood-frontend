@@ -40,8 +40,26 @@ class DiagnosisPage extends ConsumerWidget {
     if (diagnosis.isLoading) {
       return Scaffold(
         backgroundColor: AppColors.background,
-        body: const Center(
-          child: CircularProgressIndicator(),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  AppColors.primary,
+                ),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                '質問を読み込み中...',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
