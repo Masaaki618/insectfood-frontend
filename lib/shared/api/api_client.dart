@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/features/insects/models/insect.dart';
+import 'package:frontend/features/questions/models/question.dart';
 
 class ApiClient {
   static late final Dio _dio;
@@ -25,5 +26,12 @@ class ApiClient {
   Future<Insect> getInsectById(int id) async {
     final response = await _dio.get('/insects/$id');
     return Insect.fromJson(response.data);
+  }
+
+  Future<List<Question>> getQuestions() async {
+    final response = await _dio.get('/questions');
+    return (response.data as List)
+        .map((json) => Question.fromJson(json))
+        .toList();
   }
 }
