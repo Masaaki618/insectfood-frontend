@@ -83,7 +83,9 @@ class DiagnosisPage extends ConsumerWidget {
     }
 
     final currentQuestion = diagnosis.questions[diagnosis.currentQuestion - 1];
-    final progressPercentage = (diagnosis.currentQuestion / 6 * 100).toInt();
+    // 完了した問い数に基づいて進捗を計算（現在の問いは含めない）
+    final completedQuestions = diagnosis.currentQuestion - 1;
+    final progressPercentage = (completedQuestions / 6 * 100).toInt();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -122,7 +124,7 @@ class DiagnosisPage extends ConsumerWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
-                    value: diagnosis.currentQuestion / 6,
+                    value: completedQuestions / 6,
                     minHeight: 6,
                     backgroundColor: Colors.grey.withAlpha(77),
                     valueColor: AlwaysStoppedAnimation<Color>(
