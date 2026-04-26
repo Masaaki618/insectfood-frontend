@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/diagnosis/pages/diagnosis_page.dart';
+import 'package:frontend/features/diagnosis/pages/diagnosis_result_page.dart';
 import 'package:frontend/features/insects/pages/insects_list_page.dart';
 import 'package:frontend/features/insects/pages/insect_detail_page.dart';
 import 'package:frontend/shared/theme/app_colors.dart';
@@ -7,7 +9,7 @@ import 'package:go_router/go_router.dart';
 // アプリのルート定義
 // 画面遷移のルートをすべてここで管理する
 final _router = GoRouter(
-  initialLocation: '/insects', // ← ここを変更
+  initialLocation: '/diagnosis', // ← 診断フロー画面を確認
   routes: [
     GoRoute(
       path: '/',
@@ -16,13 +18,11 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/diagnosis',
-      builder: (context, state) =>
-          const Scaffold(body: Center(child: Text('診断フロー画面'))),
+      builder: (context, state) => const DiagnosisPage(),
     ),
     GoRoute(
       path: '/diagnosis/result',
-      builder: (context, state) =>
-          const Scaffold(body: Center(child: Text('診断結果画面'))),
+      builder: (context, state) => const DiagnosisResultPage(),
     ),
     GoRoute(
       path: '/insects',
