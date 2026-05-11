@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/features/diagnosis/models/diagnosis_result.dart';
 import 'package:frontend/features/insects/models/insect.dart';
 import 'package:frontend/features/questions/models/question.dart';
 
@@ -33,5 +34,15 @@ class ApiClient {
     return (response.data as List)
         .map((json) => Question.fromJson(json))
         .toList();
+  }
+
+  /// 診断スコアをサーバーに送信し、AIが推奨した昆虫とコメントを取得
+  /// [scores]: カテゴリ別スコアを含むマップ（visual/physical/mental）
+  Future<DiagnosisResult> postDiagnosis(Map<String, dynamic> scores) async {
+    final response = await _dio.post(
+      '/diagnosis',
+      data: {'scores': scores},
+    );
+    return DiagnosisResult.fromJson(response.data);
   }
 }
