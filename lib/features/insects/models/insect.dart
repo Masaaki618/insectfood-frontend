@@ -5,7 +5,7 @@ class Insect {
   final String introduction;
   final String taste;
   final String texture;
-  final String insectImg;
+  final String? insectImg;
   final String? aiComment;
   final RadarChart? radarChart;
 

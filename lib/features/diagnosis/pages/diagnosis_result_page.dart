@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/features/diagnosis/providers/diagnosis_provider.dart';
 import 'package:frontend/features/diagnosis/providers/diagnosis_result_provider.dart';
 import 'package:frontend/shared/theme/app_colors.dart';
+import 'package:frontend/shared/widgets/difficulty_stars.dart';
 import 'package:go_router/go_router.dart';
 
 class DiagnosisResultPage extends ConsumerWidget {
@@ -55,7 +56,7 @@ class DiagnosisResultPage extends ConsumerWidget {
         ),
       ),
       data: (result) => Scaffold(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryLight,
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
@@ -66,14 +67,26 @@ class DiagnosisResultPage extends ConsumerWidget {
                     horizontal: 16,
                     vertical: 24,
                   ),
-                  child: const Text(
-                    '診断結果',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                  child: Column(
+                    children: [
+                      Text(
+                        '診断結果',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'あなたにおすすめの昆虫はこちらです！',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Container(
@@ -81,18 +94,26 @@ class DiagnosisResultPage extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withAlpha(25), // 影の色と透明度
+                        blurRadius: 8, // ぼかしの強さ
+                        offset: const Offset(0, 2), // 影の位置（下方向）
+                      ),
+                    ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      if (result.insect.insectImg.isNotEmpty)
+                      if (result.insect.insectImg != null &&
+                          result.insect.insectImg!.isNotEmpty)
                         ClipRRect(
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(24),
                             topRight: Radius.circular(24),
                           ),
                           child: Image.network(
-                            result.insect.insectImg,
+                            result.insect.insectImg!,
                             height: 280,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
@@ -112,16 +133,29 @@ class DiagnosisResultPage extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                '難易度: ${result.insect.difficulty}/5',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
-                                ),
+                            Text(
+                              result.insect.name,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
                               ),
+                            ),
+                            Row(
+                              children: [
+                                DifficultyStars(
+                                  difficulty: result.insect.difficulty,
+                                ),
+                                SizedBox(width: 16),
+                                Text(
+                                  '難易度: ${result.insect.difficulty}/5',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 16),
                             Row(
@@ -249,7 +283,7 @@ class DiagnosisResultPage extends ConsumerWidget {
                                   ),
                                 ),
                                 child: const Text(
-                                  '詳細を見る',
+                                  '詳細を見る →',
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
@@ -259,78 +293,6 @@ class DiagnosisResultPage extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: OutlinedButton(
-                                    onPressed: () {
-                                      ref
-                                          .read(diagnosisStateProvider.notifier)
-                                          .reset();
-                                      context.go('/diagnosis');
-                                    },
-                                    style: OutlinedButton.styleFrom(
-                                      side: BorderSide(
-                                        color: AppColors.primary,
-                                        width: 1,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 12,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.refresh,
-                                          size: 16,
-                                          color: AppColors.primary,
-                                        ),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          'もう一度診断',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.primary,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: OutlinedButton(
-                                    onPressed: () => context.go('/insects'),
-                                    style: OutlinedButton.styleFrom(
-                                      side: BorderSide(
-                                        color: Colors.grey.withAlpha(77),
-                                        width: 1,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 12,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      '昆虫一覧を見る',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade700,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
                           ],
                         ),
                       ),
@@ -338,6 +300,84 @@ class DiagnosisResultPage extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () {
+                                ref
+                                    .read(diagnosisStateProvider.notifier)
+                                    .reset();
+                                context.go('/diagnosis');
+                              },
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(
+                                  color: AppColors.primary,
+                                  width: 1,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.refresh,
+                                    size: 16,
+                                    color: AppColors.primary,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'もう一度診断',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () => context.go('/insects'),
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(
+                                  color: Colors.grey.withAlpha(77),
+                                  width: 1,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: Text(
+                                '昆虫一覧を見る🪰',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey.shade700,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
