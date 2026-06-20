@@ -23,8 +23,8 @@ class InsectsListPage extends ConsumerWidget {
               child: Card(
                 margin: const EdgeInsets.all(8),
                 child: ListTile(
-                  leading: insect.insectImg.isNotEmpty
-                      ? Image.network(insect.insectImg, width: 50)
+                  leading: insect.insectImg != null && insect.insectImg!.isNotEmpty
+                      ? Image.network(insect.insectImg!, width: 50)
                       : const Icon(Icons.bug_report),
                   title: Text(insect.name),
                   subtitle: Text(insect.introduction),

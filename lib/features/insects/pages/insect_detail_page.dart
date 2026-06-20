@@ -47,14 +47,15 @@ class InsectDetailPage extends ConsumerWidget {
                   ),
                 ),
                 // 昆虫画像
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 300,
-                    child: Image.network(insect.insectImg, fit: BoxFit.cover),
+                if (insect.insectImg != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 300,
+                      child: Image.network(insect.insectImg!, fit: BoxFit.cover),
+                    ),
                   ),
-                ),
                 // 白い背景のコンテナ
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
